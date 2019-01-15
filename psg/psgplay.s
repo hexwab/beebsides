@@ -1,6 +1,6 @@
 org &2000
 .playstart
-INCBIN "psg/psgdata"
+;INCBIN "psg/psgdata"
 {
 ptr=&b0
 seqptr=&b8
@@ -22,7 +22,6 @@ STY     &FE43   ;set
 STA     &FE4F   ;output A on port A
 INY             ;Y=0
 STY     &FE40   ;enable sound chip
-NOP
 NOP
 NOP
 NOP
@@ -124,7 +123,7 @@ STA chan4
 RTS
 
 .*playinit
-PHP:PHA:TXA:PHA:TYA:PHA
+TXA:PHA:TYA:PHA
         LDA #&7F
         STA &FE4E ; R14=Interrupt Enable (disable all interrupts)
 
@@ -134,7 +133,7 @@ PHP:PHA:TXA:PHA:TYA:PHA
         LDA #64
         STA &FE4B ; R11=Auxillary Control Register (timer 1 latch mode)
 
-        LDX #&60
+        LDX #&62 ; playback speed
         STX &FE44 ; R4=T1 Low-Order Latches (write)
         STX &FE45 ; R5=T1 High-Order Counter
 
@@ -196,9 +195,13 @@ LDA #16 \pattsize%
 STA evcount
 
 .event
-PLA:TAY:PLA:TAX:PLA:PLP:RTS
+PLA:TAY:PLA:TAX
+.ret RTS
 .*poll
-PHP:PHA:TXA:PHA:TYA:PHA
+LDA &FE4D
+AND #&40
+BEQ ret	
+TXA:PHA:TYA:PHA
 .delay
 	LDA &FE44 \clear
 
@@ -272,22 +275,39 @@ EQUD 0 \chan counts
 EQUD 0 \seq counts
 EQUB 140 \seqlen
 .initend
-.*standalone
-	SEI
-	JSR playinit
+;.*standalone
+;	SEI
 .*runner
+	ldy #10
+.regloop
+	sty &FE00
+	lda regs-1,Y
+	sta &FE01
+	dey
+	bne regloop
+	lda #&0F
+	sta $FE34
+	LDA #$2C
+	STA nop_this_out
+	JSR playinit
+	JSR decrunch
 	LDA #$45:STA &FE10
 .runloop
 	LDA #&40
         BIT &FE4D
-	beq runner
+	beq runloop
 	jsr poll
 	bne runloop
+.regs
+	equb 72:equb 94: equb &28
+	equb 38: equb 0: equb 34: equb 36
+	equb 0: equb 7: equb 32: ;equb 0
+	;equb 6: equb &00
 ;SEI
 ;	JSR playinit
 ;.runloop
 ;	JSR poll
 ;	JMP runloop
 .playend
-SAVE "player",playstart,playend,standalone
+SAVE "player",playstart,playend ;,standalone
 }

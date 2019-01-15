@@ -30,7 +30,9 @@ decrunch_table = 1
 tabl_bi = decrunch_table
 tabl_lo = decrunch_table + 52
 tabl_hi = decrunch_table + 104
-	org $400	
+tabl_bit = $3CB
+	
+org $401
         ;; refill bits is always inlined
 MACRO mac_refill_bits
         pha
@@ -323,4 +325,4 @@ ENDIF
 ; end of decruncher
 ; -------------------------------------------------------------------
 
-SAVE "bsidesdecr",$400,$500
+SAVE "bsidesdecr",$401,$500

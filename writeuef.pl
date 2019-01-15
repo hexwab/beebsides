@@ -7,22 +7,22 @@ undef $/;
 $data=<>;
 $fn="BSides";
 $load=0xffff0600;
-$exec=0xffff0620;
+$exec=0xffff0609;
 $blkno=0;
 $blklen=length$data;
 $flags=0x80; #81;
 my $header=$fn.pack"CVVvvCV",0,
-    $load,$exec,$blkno,$blklen,$flags,0;
+    $load,$exec,$blkno,$blklen,$flags,0xe28ce1;
 $header='*'.$header.pack"n",crc($header,16,0,0,0,0x1021,0,0);
 
 $data.=pack"n",crc($data,16,0,0,0,0x1021,0,0);
 #print $data;
 chunk(0x100,$header.$data);
 
-chunk(0x110,pack"v",500); # carrier
+#chunk(0x110,pack"v",50); # carrier
 
 open F, "bsidesdecr" or die $!;
-$raw = <F>;
+$raw = reverse <F>;
 #chunk(0x100,$raw);
 
 #chunk(0x110,pack"v",100); # carrier

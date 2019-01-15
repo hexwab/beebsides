@@ -19,7 +19,7 @@ bsides.raw.beebed: bsides.raw
 	perl img.pl <bsides.raw >bsides.raw.beebed
 
 bsides.raw.beebed.exo: bsides.raw.beebed
-	exomizer level bsides.raw.beebed@0x3380 -o bsides.raw.beebed.exo
+	exomizer level bsides.raw.beebed@0x3000 -o bsides.raw.beebed.exo
 
 clean:
 	-rm -f bsides.uef loader bsidesdecr bsides.raw.beebed.exo \
