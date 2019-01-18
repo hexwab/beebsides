@@ -5,9 +5,9 @@ chunk(0x110,pack"v",100); # carrier
 
 undef $/;
 $data=<>;
-$fn="BSides";
-$load=0xffff0600;
-$exec=0xffff0609;
+$fn="BeebSides";
+$load=0xffff0500;
+$exec=0xffff0509;
 $blkno=0;
 $blklen=length$data;
 $flags=0x80; #81;
@@ -19,7 +19,7 @@ $data.=pack"n",crc($data,16,0,0,0,0x1021,0,0);
 #print $data;
 chunk(0x100,$header.$data);
 
-#chunk(0x110,pack"v",50); # carrier
+chunk(0x110,pack"v",220); # carrier
 
 open F, "bsidesdecr" or die $!;
 $raw = reverse <F>;

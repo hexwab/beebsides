@@ -1,4 +1,4 @@
-org $600
+org $500
 music_loaded=&b9
 progress_count=&9f
 .start	
@@ -16,12 +16,16 @@ progress_count=&9f
 	sta $ba
 .relocloop
 	lda ($b9),Y
-	sta $600,Y
+	sta start,Y
 	iny
 	bne relocloop
 	jmp main
 .main
 	sei
+	;; tape on
+	LDA #&85:STA &FE10
+	LDA #&D5:STA &FE08
+	;sty music_loaded ;0
 	;LDA #&7F
         ;STA &FE4E ; R14=Interrupt Enable (disable all interrupts)
 	;LDA &FE44 ; clear
@@ -32,12 +36,19 @@ progress_count=&9f
 	jsr $ffcb
 	dey
 	bpl vduloop
+	;; cursor off: 8 bytes
 	;lda #10
 	;sta $fe00
 	;sta $fe01
-	LDA #&85:STA &FE10
-	LDA #&D5:STA &FE08
-	;sty music_loaded ;0
+	;; sync: 12 bytes (+2)
+;; .sync
+;; 	ldy #2
+;; .syncloop
+;; 	jsr poll_things
+;; 	cmp #$f7
+;; 	bne sync
+;; 	dey
+;; 	bpl syncloop
 .loadinitial
 	jsr get_crunched_byte
 	sta $400,Y

@@ -1,4 +1,11 @@
 all: bsides.uef
+UEFWALK=/home/HEx/uefwalk-1.50/
+
+wav:
+	${UEFWALK}/uefwalk --output=bitstream --quiet bsides.uef \
+	| ${UEFWALK}/kleen/bitclean --verbose --text-input - \
+	| sox -t raw -c 1 -L -b 16 -e signed -r 44100 - -t wav bsides.wav
+
 
 test: bsides.uef
 	/w/b-em/b-em -tape bsides.uef
