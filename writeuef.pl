@@ -21,7 +21,7 @@ chunk(0x100,$header.$data);
 
 chunk(0x110,pack"v",220); # carrier
 
-open F, "bsidesdecr" or die $!;
+open F, "exodecr" or die $!;
 $raw = reverse <F>;
 #chunk(0x100,$raw);
 
