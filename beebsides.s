@@ -83,5 +83,5 @@ progress_count=&9f
 ;        equb %11100001, %10001100, %11100010
 .end
 save "loader",start,end
-INCLUDE "bsidesdecr.s"
+INCLUDE "exodecr.s"
 INCLUDE "psg/psgplay.s"
